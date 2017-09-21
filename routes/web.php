@@ -19,18 +19,23 @@ Route::get('about', function () {
    return view('about');
 });
 
+use App\Task;
+
 /**
  * view with data(from the db build query)
  */
 Route::get('tasks', function () {
-    $tasks = DB::table('tasks')->get();
+    $tasks = Task::all();
     return view('tasks.index', compact('tasks'));
 });
 
 // db query
 Route::get('tasks/{task}', function($id) {
-    $task = DB::table('tasks')
-        ->where('id', $id)
+    DB::listen(function ($query) {
+       echo "$query->sql\n";
+    });
+    $task = Task::where('id', $id)
+        ->notCompleted()
         ->first();
     return view('tasks.show', compact('task'));
 });
