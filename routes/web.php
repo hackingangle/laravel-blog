@@ -20,13 +20,17 @@ Route::get('about', function () {
 });
 
 /**
- * view with data
+ * view with data(from the db build query)
  */
 Route::get('tasks', function () {
-    $tasks = [
-        '超时买菜',
-        '完成代码极限挑战',
-        '看书',
-    ];
+    $tasks = DB::table('tasks')->get();
     return view('tasks.index', compact('tasks'));
+});
+
+// db query
+Route::get('tasks/{task}', function($id) {
+    $task = DB::table('tasks')
+        ->where('id', $id)
+        ->first();
+    return view('tasks.show', compact('task'));
 });
